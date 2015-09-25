@@ -1,0 +1,12 @@
+description     "OpenStack Health API"
+start on filesystem or runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+umask 022
+chdir <%= @application_dir %>
+setuid root
+setgid root
+console log # log stdout/stderr to /var/log/upstart/
+
+exec .venv/bin/python openstack_health/api.py etc/openstack-health-api.conf

@@ -1,0 +1,2 @@
+class { '::openstack_health':
+}
