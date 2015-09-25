@@ -1,0 +1,23 @@
+<% if ! [443, 80].include?(scope.lookupvar("openstack_health::api::vhost_port").to_i) %>
+Listen <%= scope.lookupvar("openstack_health::api::vhost_port") %>
+<% end %>
+WSGIPythonPath <%= scope.lookupvar("openstack_health::api::api_dir") %>:<%= scope.lookupvar("openstack_health::api::venv_dir") %>/lib/python2.7/site-packages/
+<VirtualHost *:<%= scope.lookupvar("openstack_health::api::vhost_port") %>>
+  ServerName <%= scope.lookupvar("openstack_health::api::vhost_name") %>
+  ServerAdmin <%= scope.lookupvar("openstack_health::api::serveradmin") %>
+
+  LogLevel warn
+  ErrorLog ${APACHE_LOG_DIR}/openstack-health-api-error.log
+  CustomLog ${APACHE_LOG_DIR}/openstack-health-api-access.log combined
+
+  WSGIDaemonProcess openstack_health user=www-data group=www-data threads=5
+  WSGIScriptAlias / <%= scope.lookupvar("openstack_health::api::venv_dir") %>/bin/openstack-health
+
+  <Directory <%= scope.lookupvar("openstack_health::api::api_venv_dir") %>/bin>
+      WSGIProcessGroup openstack_health.api:app
+      WSGIApplicationGroup %{GLOBAL}
+      Order deny,allow
+      Allow from all
+      Require all granted
+  </Directory>
+</VirtualHost>

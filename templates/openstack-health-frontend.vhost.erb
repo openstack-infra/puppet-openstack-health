@@ -1,0 +1,22 @@
+<% if ! [443, 80].include?(scope.lookupvar("openstack_health::frontend::vhost_port").to_i) %>
+Listen <%= scope.lookupvar("openstack_health::frontend::vhost_port") %>
+<% end %>
+<VirtualHost *:<%= scope.lookupvar("openstack_health::frontend::vhost_port") %>>
+  ServerName <%= scope.lookupvar("openstack_health::frontend::vhost_name") %>
+  ServerAdmin <%= scope.lookupvar("openstack_health::frontend::serveradmin") %>
+
+  LogLevel warn
+  ErrorLog ${APACHE_LOG_DIR}/openstack-health-frontend-error.log
+  CustomLog ${APACHE_LOG_DIR}/openstack-health-frontend-access.log combined
+
+  SetEnv OPENSTACK_HEALTH_API_URL <%= scope.lookupvar("openstack_health::frontend::api_url") %>
+
+  DocumentRoot <%= scope.lookupvar("openstack_health::frontend::frontend_dir") %>
+  DirectoryIndex index.html
+
+  <Directory <%= scope.lookupvar("openstack_health::frontend::frontend_dir") %>>
+    Order allow,deny
+    Allow from all
+    Require all granted
+  </Directory>
+</VirtualHost>
