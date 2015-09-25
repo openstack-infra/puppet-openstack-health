@@ -1,0 +1,24 @@
+{
+  "name": "openstackinfra-openstack_health",
+  "version": "0.0.1",
+  "author": "OpenStack Contributors",
+  "summary": "Puppet module for OpenStack Health",
+  "license": "Apache 2.0",
+  "source": "git://git.openstack.org/openstack-infra/puppet-openstack-health.git",
+  "project_page": "http://docs.openstack.org/infra/system-config/",
+  "issues_url": "",
+  "description": "Installs and configures OpenStack Health",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": ["8"]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": ["14.04"]
+    }
+  ],
+  "dependencies": [
+    {"name":"openstackinfra/vcsrepo","version_requirement":">= 0.0.8"}
+  ]
+}

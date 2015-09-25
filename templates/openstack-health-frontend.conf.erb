@@ -1,0 +1,12 @@
+description     "OpenStack Health Frontend"
+start on filesystem or runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+umask 022
+chdir <%= @application_dir %>
+setuid root
+setgid root
+console log # log stdout/stderr to /var/log/upstart/
+
+exec gulp dev
