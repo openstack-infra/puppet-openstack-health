@@ -10,7 +10,6 @@
 #     Used in the Apache virtual host, eg., 5000
 class openstack_health::api(
   $db_uri = undef,
-  $source_dir = '/opt/openstack-health',
   $server_admin = "webmaster@${::fqdn}",
   $vhost_name = 'localhost',
   $vhost_port = 5000,
@@ -18,8 +17,8 @@ class openstack_health::api(
 
   include ::httpd::mod::wsgi
 
-  $api_dir = "${source_dir}/openstack_health"
-  $virtualenv_dir = "${source_dir}/.venv"
+  $api_dir = "${openstack_health::source_dir}/openstack_health"
+  $virtualenv_dir = "${openstack_health::source_dir}/.venv"
 
   class { '::python':
     dev        => true,
@@ -33,15 +32,15 @@ class openstack_health::api(
     require => Class['::python'],
   }
 
-  ::python::requirements { "${source_dir}/requirements.txt":
+  ::python::requirements { "${openstack_health::source_dir}/requirements.txt":
     virtualenv => $virtualenv_dir,
     require    => Python::Virtualenv[$virtualenv_dir],
-    subscribe  => Vcsrepo[$source_dir],
+    subscribe  => Vcsrepo[$openstack_health::source_dir],
   }
 
   exec { 'package-application':
-    command => "${virtualenv_dir}/bin/pip install ${source_dir}",
-    require => Python::Requirements["${source_dir}/requirements.txt"],
+    command => "${virtualenv_dir}/bin/pip install ${openstack_health::source_dir}",
+    require => Python::Requirements["${openstack_health::source_dir}/requirements.txt"],
   }
 
   file { '/etc/openstack-health.conf':
@@ -50,7 +49,7 @@ class openstack_health::api(
     owner     => 'openstack_health',
     group     => 'openstack_health',
     mode      => '0644',
-    subscribe => Vcsrepo[$source_dir],
+    subscribe => Vcsrepo[$openstack_health::source_dir],
   }
 
   ::httpd::vhost { "${vhost_name}-api":
