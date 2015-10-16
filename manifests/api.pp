@@ -10,7 +10,6 @@
 #     Used in the Apache virtual host, eg., 5000
 class openstack_health::api(
   $db_uri = undef,
-  $source_dir = '/opt/openstack-health',
   $server_admin = "webmaster@${::fqdn}",
   $vhost_name = 'localhost',
   $vhost_port = 5000,
@@ -36,7 +35,7 @@ class openstack_health::api(
   ::python::requirements { "${source_dir}/requirements.txt":
     virtualenv => $virtualenv_dir,
     require    => Python::Virtualenv[$virtualenv_dir],
-    subscribe  => Vcsrepo[$source_dir],
+    subscribe  => Vcsrepo[$openstack_health::source_dir],
   }
 
   exec { 'package-application':
