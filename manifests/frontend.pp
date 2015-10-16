@@ -2,23 +2,11 @@
 # params:
 #   source_dir:
 #     The directory where the application will be running
-#   serveradmin:
-#     Used in the Apache virtual host, eg., openstack-health@openstack.org
-#   vhost_name:
-#     Used in the Apache virtual host, eg., health.openstack.org
-#   vhost_port:
-#     Used in the Apache virtual host, eg., 5000
-#   api_endpoint:
-#     The URL where openstack-health API is running
+
 class openstack_health::frontend(
   $source_dir = '/opt/openstack-health',
-  $serveradmin = "webmaster@${::fqdn}",
-  $vhost_name = 'localhost',
-  $vhost_port = 80,
-  $api_endpoint = 'http://localhost:5000',
+  $api_endpoint,
 ) {
-
-  $frontend_dir = "${source_dir}/build"
 
   class { '::nodejs':
     legacy_debian_symlinks => true,
@@ -57,12 +45,13 @@ class openstack_health::frontend(
     subscribe => Vcsrepo[$source_dir],
   }
 
-  ::httpd::vhost { "${vhost_name}-frontend":
-    docroot  => 'MEANINGLESS ARGUMENT',
-    port     => $vhost_port,
-    priority => '100',
-    ssl      => false,
-    template => 'openstack_health/openstack-health-frontend.vhost.erb',
-    require  => Exec['build-static-files'],
+  file { "${source_dir}/build/config.json":
+      ensure  => present,
+      owner   => 'openstack_health',
+      group   => 'openstack_health',
+      mode    => '0755',
+      content => template('openstack_health/config.json.erb'),
+      require => Exec['build-static-files']
   }
+
 }
