@@ -53,6 +53,10 @@ class openstack_health::api(
     subscribe => Vcsrepo[$source_dir],
   }
 
+  file {'/var/cache/apache2/mod_disk_cache':
+    ensure => directory,
+  }
+
   ::httpd::vhost { "${vhost_name}-api":
     docroot  => 'MEANINGLESS ARGUMENT',
     port     => $vhost_port,
@@ -61,6 +65,7 @@ class openstack_health::api(
     template => 'openstack_health/openstack-health-api.vhost.erb',
     require  => [
       File['/etc/openstack-health.conf'],
+      File['/var/cache/apache2/mod_disk_cache'],
       Exec['package-application'],
     ],
   }
