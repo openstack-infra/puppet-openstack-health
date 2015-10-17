@@ -64,4 +64,16 @@ class openstack_health::api(
       Exec['package-application'],
     ],
   }
+  if ! defined(Httpd_mod['cache']) {
+    httpd_mod { 'cache':
+      ensure => present,
+      before => Service['httpd']
+    }
+  }
+  if ! defined(Httpd_mod['cache_disk']) {
+    httpd_mod { 'cache_disk':
+      ensure => present,
+      before => Service['httpd'],
+    }
+  }
 }
