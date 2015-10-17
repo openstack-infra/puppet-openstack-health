@@ -61,7 +61,20 @@ class openstack_health::api(
     template => 'openstack_health/openstack-health-api.vhost.erb',
     require  => [
       File['/etc/openstack-health.conf'],
+      File['/var/cache/apache2/mod_disk_cache'],
       Exec['package-application'],
     ],
+  }
+  if ! defined(Httpd_mod['cache']) {
+    httpd_mod { 'cache':
+      ensure => present,
+      before => Service['httpd']
+    }
+  }
+  if ! defined(Httpd_mod['cache_disk']) {
+    httpd_mod { 'cache_disk':
+      ensure => present,
+      before => Service['httpd'],
+    }
   }
 }

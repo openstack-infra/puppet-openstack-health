@@ -23,5 +23,15 @@ WSGIPythonHome <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>
     Require all granted
   </Directory>
 
+  <IfModule mod_cache.c>
+    <IfModule mod_cache_disk.c>
+        CacheRoot "/var/cache/apache2/mod_disk_cache"
+        CacheEnable disk  "/"
+        CacheDirLevels 5
+        CacheDirLength 3
+        CacheLock on
+    </IfModule>
+  </IfModule>
+
   DocumentRoot <%= scope.lookupvar("openstack_health::api::api_dir") %>
 </VirtualHost>
