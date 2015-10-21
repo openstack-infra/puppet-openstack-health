@@ -24,18 +24,14 @@ define openstack_health::site(
     api_endpoint => $api_endpoint
   }
 
-  exec {'move-static-files':
-    command     => "mv ${openstack_health::source_dir}/build ${httproot}",
-    path        => ['/usr/local/bin/', '/usr/bin/', '/bin/'],
-    subscribe   => Exec['build-static-files'],
-    refreshonly => true,
-  }
-
   file {$httproot:
     ensure  => directory,
     owner   => 'openstack_health',
     group   => 'openstack_health',
-    mode    => '0755',
-    require => Exec['move-static-files']
+    mode    => '0644',
+    recurse => true,
+    purge   => true,
+    source  => "${openstack_health::source_dir}/build",
+    require => Exec['build-static-files']
   }
 }
