@@ -40,7 +40,7 @@ class openstack_health::api(
   }
 
   exec { 'package-application':
-    command => "${virtualenv_dir}/bin/pip install ${source_dir}",
+    command => "${virtualenv_dir}/bin/pip install -e ${source_dir}",
     require => Python::Requirements["${source_dir}/requirements.txt"],
   }
 
