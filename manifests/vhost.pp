@@ -22,11 +22,12 @@ class openstack_health::vhost(
   $frontend_dir = "${openstack_health::source_dir}/build"
 
   httpd::vhost { "${vhost_name}-frontend":
-    docroot  => 'MEANINGLESS ARGUMENT',
-    port     => $vhost_port,
-    priority => '100',
-    ssl      => false,
-    template => 'openstack_health/openstack-health-frontend.vhost.erb',
-    require  => Exec['build-static-files'],
+    docroot    => 'MEANINGLESS ARGUMENT',
+    vhost_name => $vhost_name,
+    port       => $vhost_port,
+    priority   => '100',
+    ssl        => false,
+    template   => 'openstack_health/openstack-health-frontend.vhost.erb',
+    require    => Exec['build-static-files'],
   }
 }
