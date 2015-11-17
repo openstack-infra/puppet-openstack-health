@@ -12,7 +12,9 @@ Listen <%= @vhost_port %>
   <Directory <%= @frontend_dir %>>
     Order allow,deny
     Allow from all
-    Require all granted
+    <IfVersion >= 2.4>
+     Require all granted
+    </IfVersion>
   </Directory>
 
   DocumentRoot <%= @frontend_dir %>
