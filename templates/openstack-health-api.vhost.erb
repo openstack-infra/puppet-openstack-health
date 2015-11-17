@@ -20,17 +20,23 @@ WSGIPythonHome <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>
 
     Order allow,deny
     Allow from all
-    Require all granted
+    <IfVersion >= 2.4>
+     Require all granted
+    </IfVersion>
   </Directory>
 
   <IfModule mod_cache.c>
-    <IfModule mod_cache_disk.c>
+    <% if @operatingsystem == "Ubuntu" and @operatingsystemrelease == "12.04" %>
+     <IfModule mod_disk_cache.c>
+    <% else %>
+     <IfModule mod_cache_disk.c>
+    <% end %>
         CacheRoot "/var/cache/apache2/mod_disk_cache"
         CacheEnable disk  "/"
         CacheDirLevels 5
         CacheDirLength 3
         CacheLock on
-    </IfModule>
+     </IfModule>
   </IfModule>
 
   DocumentRoot <%= scope.lookupvar("openstack_health::api::api_dir") %>
