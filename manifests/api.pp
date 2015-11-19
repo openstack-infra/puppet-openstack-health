@@ -14,6 +14,13 @@ class openstack_health::api(
   $server_admin = "webmaster@${::fqdn}",
   $vhost_name = 'localhost',
   $vhost_port = 5000,
+  $ignored_run_metadata_keys = ['build_change',
+                                'build_node',
+                                'build_patchset',
+                                'build_ref',
+                                'build_short_uuid',
+                                'build_uuid',
+                                'build_zuul_url'],
 ) {
 
   include ::httpd::mod::wsgi
