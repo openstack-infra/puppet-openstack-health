@@ -43,6 +43,10 @@ describe 'puppet-openstack_health::api manifest', :if => ['debian', 'ubuntu'].in
       it { should be_file }
       it { should be_owned_by 'openstack_health' }
       it { should be_grouped_into 'openstack_health' }
+      its(:content) { should contain 'db_uri' }
+      its(:content) { should contain 'ignored_run_metadata_keys' }
+      its(:content) { should contain 'build_change' }
+      its(:content) { should contain 'build_zuul_url' }
     end
   end
 
