@@ -14,9 +14,25 @@ class openstack_health::api(
   $server_admin = "webmaster@${::fqdn}",
   $vhost_name = 'localhost',
   $vhost_port = 5000,
+  $ignored_run_metadata_keys = undef,
 ) {
 
   include ::httpd::mod::wsgi
+
+  $default_ignored_run_metadata_keys = ['build_change',
+                                        'build_node',
+                                        'build_patchset',
+                                        'build_ref',
+                                        'build_short_uuid',
+                                        'build_uuid',
+                                        'build_zuul_url',
+                                        'filename']
+
+  if (is_array($ignored_run_metadata_keys)) {
+    $ignored_keys = $ignored_run_metadata_keys
+  } else {
+    $ignored_keys = $default_ignored_run_metadata_keys
+  }
 
   $api_dir = "${source_dir}/openstack_health"
   $virtualenv_dir = "${source_dir}/.venv"

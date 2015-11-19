@@ -1,2 +1,8 @@
 [default]
 db_uri = <%= scope.lookupvar("openstack_health::api::db_uri") %>
+<% if @ignored_keys.length > 0 -%>
+ignored_run_metadata_keys =
+  <% @ignored_keys.each do |ignored_key| -%>
+    <%= ignored_key %>
+  <% end -%>
+<% end -%>
