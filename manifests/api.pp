@@ -33,17 +33,17 @@ class openstack_health::api(
     require => Class['::python'],
   }
 
-  ::python::requirements { "${source_dir}/requirements.txt":
-    virtualenv => $virtualenv_dir,
+  exec { 'requirements':
+    command    => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt"
     require    => Python::Virtualenv[$virtualenv_dir],
     subscribe  => Vcsrepo[$source_dir],
+    refreshonly => true,
   }
 
   exec { 'package-application':
     command     => "${virtualenv_dir}/bin/pip install -e ${source_dir}",
-    require     => Python::Requirements["${source_dir}/requirements.txt"],
     refreshonly => true,
-    subscribe   => Vcsrepo[$source_dir],
+    subscribe   => Exec['requirements'],
   }
 
   file { '/etc/openstack-health.conf':
