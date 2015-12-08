@@ -38,6 +38,7 @@ class openstack_health::api(
     require     => Python::Virtualenv[$virtualenv_dir],
     subscribe   => Vcsrepo[$source_dir],
     refreshonly => true,
+    timeout     => 30,
   }
 
   exec { 'package-application':
