@@ -9,12 +9,12 @@
 #   vhost_port:
 #     Used in the Apache virtual host, eg., 5000
 class openstack_health::api(
-  $db_uri = undef,
-  $source_dir = '/opt/openstack-health',
-  $server_admin = "webmaster@${::fqdn}",
-  $vhost_name = 'localhost',
-  $vhost_port = 5000,
+  $db_uri                    = undef,
   $ignored_run_metadata_keys = undef,
+  $server_admin              = "webmaster@${::fqdn}",
+  $source_dir                = '/opt/openstack-health',
+  $vhost_name                = 'localhost',
+  $vhost_port                = 5000,
 ) {
 
   include ::httpd::mod::wsgi

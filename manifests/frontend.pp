@@ -4,8 +4,8 @@
 #     The directory where the application will be running
 
 class openstack_health::frontend(
-  $source_dir = '/opt/openstack-health',
   $api_endpoint,
+  $source_dir = '/opt/openstack-health',
 ) {
 
   class { '::nodejs':

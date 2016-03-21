@@ -9,10 +9,10 @@
 #   api_endpoint:
 #     The URL where openstack-health API is running
 class openstack_health::vhost(
-  $serveradmin = "webmaster@${::fqdn}",
-  $vhost_name = 'localhost',
-  $vhost_port = 80,
   $api_endpoint = 'http://localhost:5000',
+  $serveradmin  = "webmaster@${::fqdn}",
+  $vhost_name   = 'localhost',
+  $vhost_port   = 80,
 ) {
 
   class { '::openstack_health::frontend':
