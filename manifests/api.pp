@@ -9,16 +9,16 @@
 #   vhost_port:
 #     Used in the Apache virtual host, eg., 5000
 class openstack_health::api(
-  $db_uri = undef,
-  $source_dir = '/opt/openstack-health',
-  $server_admin = "webmaster@${::fqdn}",
-  $vhost_name = 'localhost',
-  $vhost_port = 5000,
+  $cache_expiration          = 900,
+  $db_uri                    = undef,
+  $elastic_recheck_dir       = '/opt/elastic-recheck',
+  $elastic_recheck_repo      = 'https://git.openstack.org/openstack-infra/elastic-recheck',
+  $elastic_recheck_revision  = 'master',
   $ignored_run_metadata_keys = undef,
-  $elastic_recheck_dir = '/opt/elastic-recheck',
-  $elastic_recheck_repo = 'https://git.openstack.org/openstack-infra/elastic-recheck',
-  $elastic_recheck_revision = 'master',
-  $cache_expiration = 900,
+  $server_admin              = "webmaster@${::fqdn}",
+  $source_dir                = '/opt/openstack-health',
+  $vhost_name                = 'localhost',
+  $vhost_port                = 5000,
 ) {
 
   include ::httpd::mod::wsgi

@@ -7,9 +7,9 @@
 #   git_revision:
 #     Branch or tag that will be deployed
 class openstack_health(
-  $source_dir = '/opt/openstack-health',
-  $git_source_repo = 'https://git.openstack.org/openstack/openstack-health',
   $git_revision    = 'master',
+  $git_source_repo = 'https://git.openstack.org/openstack/openstack-health',
+  $source_dir      = '/opt/openstack-health',
 ) {
 
   include ::httpd
