@@ -1,4 +1,5 @@
 [default]
+query_dir = /opt/elastic-recheck/queries
 db_uri = <%= scope.lookupvar("openstack_health::api::db_uri") %>
 <% if @ignored_keys.length > 0 -%>
 ignored_run_metadata_keys =

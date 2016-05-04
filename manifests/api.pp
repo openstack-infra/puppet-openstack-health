@@ -15,6 +15,7 @@ class openstack_health::api(
   $vhost_name = 'localhost',
   $vhost_port = 5000,
   $ignored_run_metadata_keys = undef,
+  $elastic_recheck_dir = '/opt/elastic-recheck',
 ) {
 
   include ::httpd::mod::wsgi
@@ -46,6 +47,16 @@ class openstack_health::api(
     version    => 'system',
   }
 
+  vcsrepo { $elastic_recheck_dir :
+    ensure   => latest,
+    owner    => 'openstack_health',
+    group    => 'openstack_health',
+    provider => git,
+    revision => 'master',
+    source   => 'https://git.openstack.org/openstack-infra/elastic-recheck',
+    require  => Class['::openstack_health::user'],
+  }
+
   ::python::virtualenv { $virtualenv_dir:
     ensure  => present,
     require => Class['::python'],
@@ -75,6 +86,14 @@ class openstack_health::api(
     timeout     => 1800,
   }
 
+  exec { 'elastic-recheck-install':
+    command     => "${virtualenv_dir}/bin/pip install -U ${elastic_recheck_dir}",
+    require     => Python::Virtualenv[$virtualenv_dir],
+    subscribe   => Vcsrepo[$elastic_recheck_dir],
+    refreshonly => true,
+    timeout     => 1800,
+  }
+
   exec { 'package-application':
     command     => "${virtualenv_dir}/bin/pip install -e ${source_dir}",
     refreshonly => true,
@@ -87,7 +106,10 @@ class openstack_health::api(
     owner     => 'openstack_health',
     group     => 'openstack_health',
     mode      => '0644',
-    subscribe => Vcsrepo[$source_dir],
+    subscribe => [
+      Vcsrepo[$source_dir],
+      Vcsrepo['/opt/openstack-health'],
+    ],
   }
 
   ::httpd::vhost { "${vhost_name}-api":
