@@ -82,6 +82,10 @@ class openstack_health::api(
     }
   }
 
+  package {'libssl-dev':
+    ensure => present,
+  }
+
   package {'libxml2-dev':
     ensure => present,
   }
@@ -107,6 +111,7 @@ class openstack_health::api(
     require     => [
       Python::Virtualenv[$virtualenv_dir],
       Package['libffi-dev'],
+      Package['libssl-dev'],
     ],
     subscribe   => Vcsrepo[$elastic_recheck_dir],
     refreshonly => true,
