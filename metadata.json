@@ -20,5 +20,6 @@
   ],
   "dependencies": [
     {"name":"openstackinfra/vcsrepo","version_requirement":">= 0.0.8"}
+    {"name":"saz/memcached","version_requirement":"">= 2.8.1"}
   ]
 }
