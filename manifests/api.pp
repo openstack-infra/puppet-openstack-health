@@ -68,6 +68,19 @@ class openstack_health::api(
     ensure => present,
   }
 
+  case $::osfamily {
+    'RedHat': {
+      package {'libffi-devel':
+        ensure => present,
+      }
+    }
+    'Debian': {
+      package {'libffi-dev':
+        ensure => present,
+      }
+    }
+  }
+
   package {'libxml2-dev':
     ensure => present,
   }
