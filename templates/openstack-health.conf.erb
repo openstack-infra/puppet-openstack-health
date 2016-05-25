@@ -1,6 +1,8 @@
 [default]
 query_dir = <%= @elastic_recheck_dir %>/queries
 cache_expiration = <%= @cache_expiration %>
+cache_backend = dogpile.cache.pylibmc
+cache_url = 127.0.0.1
 db_uri = <%= scope.lookupvar("openstack_health::api::db_uri") %>
 <% if @ignored_keys.length > 0 -%>
 ignored_run_metadata_keys =

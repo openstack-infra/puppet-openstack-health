@@ -50,6 +50,11 @@ class openstack_health::api(
     version    => 'system',
   }
 
+  class { 'memcached':
+    max_memory => '60%',
+    listen_ip  => '127.0.0.1',
+  }
+
   vcsrepo { $elastic_recheck_dir :
     ensure   => latest,
     owner    => 'openstack_health',
@@ -95,9 +100,16 @@ class openstack_health::api(
     ensure => present,
   }
 
+  package {'libmemcached-dev':
+    ensure => present,
+  }
+
   exec { 'requirements':
-    command     => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt",
-    require     => Python::Virtualenv[$virtualenv_dir],
+    command     => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt pylibmc",
+    require     => [
+      Python::Virtualenv[$virtualenv_dir],
+      Package['libmemcached-dev'],
+    ],
     subscribe   => Vcsrepo[$source_dir],
     refreshonly => true,
     timeout     => 1800,
