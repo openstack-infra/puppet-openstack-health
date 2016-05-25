@@ -18,6 +18,7 @@ class openstack_health::api(
   $elastic_recheck_dir = '/opt/elastic-recheck',
   $elastic_recheck_repo = 'https://git.openstack.org/openstack-infra/elastic-recheck',
   $elastic_recheck_revision = 'master',
+  $cache_expiration = 900,
 ) {
 
   include ::httpd::mod::wsgi
