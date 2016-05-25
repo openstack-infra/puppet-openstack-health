@@ -68,6 +68,20 @@ class openstack_health::api(
     ensure => present,
   }
 
+  case $::osfamily {
+    'RedHat': {
+      package {'libffi-dev':
+        ensure => present,
+        name   => 'libffi-devel',
+      }
+    }
+    'default': {
+      package {'libffi-dev':
+        ensure => present,
+      }
+    }
+  }
+
   package {'libxml2-dev':
     ensure => present,
   }
@@ -90,7 +104,10 @@ class openstack_health::api(
 
   exec { 'elastic-recheck-install':
     command     => "${virtualenv_dir}/bin/pip install -U ${elastic_recheck_dir}",
-    require     => Python::Virtualenv[$virtualenv_dir],
+    require     => [
+      Python::Virtualenv[$virtualenv_dir],
+      Package['libffi-devel'],
+    ],
     subscribe   => Vcsrepo[$elastic_recheck_dir],
     refreshonly => true,
     timeout     => 1800,
