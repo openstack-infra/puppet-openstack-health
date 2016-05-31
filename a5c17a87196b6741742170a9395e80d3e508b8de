@@ -1,0 +1,9 @@
+Code-Review+2: yolanda.robla <info@ysoft.biz>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 31 May 2016 18:38:14 +0000
+Reviewed-on: https://review.openstack.org/321147
+Project: openstack-infra/puppet-openstack_health
+Branch: refs/heads/master
