@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Workflow+1: Paul Belanger <pabelanger@redhat.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 31 May 2016 18:56:52 +0000
+Reviewed-on: https://review.openstack.org/321245
+Project: openstack-infra/puppet-openstack_health
+Branch: refs/heads/master
