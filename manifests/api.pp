@@ -26,7 +26,8 @@ class openstack_health::api(
   $default_ignored_run_metadata_keys = ['build_change', 'build_node',
                                         'build_patchset', 'build_ref',
                                         'build_short_uuid', 'build_uuid',
-                                        'build_zuul_url', 'filename']
+                                        'build_zuul_url', 'filename',
+                                        'build_newrev']
 
   if $ignored_run_metadata_keys {
     # In case it was defined, ensure the value provided is an array
