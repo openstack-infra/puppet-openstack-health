@@ -33,6 +33,6 @@ define openstack_health::site(
     purge   => true,
     force   => true,
     source  => "${openstack_health::source_dir}/build",
-    require => Exec['build-static-files']
+    require => ::Exec['build-static-files']
   }
 }

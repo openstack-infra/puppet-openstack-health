@@ -28,6 +28,6 @@ class openstack_health::vhost(
     priority   => '100',
     ssl        => false,
     template   => 'openstack_health/openstack-health-frontend.vhost.erb',
-    require    => Exec['build-static-files'],
+    require    => ::Exec['build-static-files'],
   }
 }

@@ -12,7 +12,7 @@ class openstack_health::user {
     gid        => 'openstack_health',
     shell      => '/bin/bash',
     membership => 'minimum',
-    require    => Group['openstack_health'],
+    require    => ::Group['openstack_health'],
   }
 
   file { '/home/openstack_health':
@@ -20,6 +20,6 @@ class openstack_health::user {
     owner   => 'openstack_health',
     group   => 'openstack_health',
     mode    => '0644',
-    require => User['openstack_health'],
+    require => ::User['openstack_health'],
   }
 }

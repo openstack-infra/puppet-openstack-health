@@ -41,7 +41,7 @@ class openstack_health::frontend(
     command   => 'gulp prod',
     cwd       => $source_dir,
     path      => ['/usr/local/bin/', '/usr/bin/', '/bin/'],
-    require   => Exec['install-frontend-requirements'],
+    require   => ::Exec['install-frontend-requirements'],
     subscribe => Vcsrepo[$source_dir],
   }
 
@@ -51,7 +51,7 @@ class openstack_health::frontend(
       group   => 'openstack_health',
       mode    => '0755',
       content => template('openstack_health/config.json.erb'),
-      require => Exec['build-static-files']
+      require => ::Exec['build-static-files']
   }
 
 }
