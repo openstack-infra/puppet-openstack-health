@@ -42,7 +42,6 @@ class openstack_health::api(
   }
 
   $api_dir = "${source_dir}/openstack_health"
-  $virtualenv_dir = "${source_dir}/.venv"
 
   class { '::python':
     dev        => true,
@@ -50,7 +49,6 @@ class openstack_health::api(
     virtualenv => true,
     version    => 'system',
   }
-
   class { '::memcached':
     max_memory => '60%',
     listen_ip  => '127.0.0.1',
@@ -64,11 +62,6 @@ class openstack_health::api(
     revision => $elastic_recheck_revision,
     source   => $elastic_recheck_repo,
     require  => Class['::openstack_health::user'],
-  }
-
-  ::python::virtualenv { $virtualenv_dir:
-    ensure  => present,
-    require => Class['::python'],
   }
 
   package {'apache2-utils':
@@ -109,22 +102,9 @@ class openstack_health::api(
     ensure => present,
   }
 
-  exec { 'requirements':
-    command     => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt",
-    require     => [
-      Python::Virtualenv[$virtualenv_dir],
-      Package['libmemcached-dev'],
-      Package['cython'],
-    ],
-    subscribe   => Vcsrepo[$source_dir],
-    refreshonly => true,
-    timeout     => 1800,
-  }
-
   exec { 'elastic-recheck-install':
-    command     => "${virtualenv_dir}/bin/pip install -U ${elastic_recheck_dir}",
+    command     => "pip install -U ${elastic_recheck_dir}",
     require     => [
-      Python::Virtualenv[$virtualenv_dir],
       Package['libffi-dev'],
     ],
     subscribe   => Vcsrepo[$elastic_recheck_dir],
@@ -132,10 +112,16 @@ class openstack_health::api(
     timeout     => 1800,
   }
 
-  exec { 'package-application':
-    command     => "${virtualenv_dir}/bin/pip install -e ${source_dir}",
+  exec { 'install_openstack_health':
+    command     => "pip install -e ${source_dir}",
+    require     => [
+      Package['libmemcached-dev'],
+      Package['cython'],
+      Exec['elastic-recheck-install'],
+    ],
+    subscribe   => Vcsrepo[$source_dir],
     refreshonly => true,
-    subscribe   => Exec['requirements'],
+    timeout     => 1800,
   }
 
   file { '/etc/openstack-health.conf':
@@ -158,7 +144,7 @@ class openstack_health::api(
     template => 'openstack_health/openstack-health-api.vhost.erb',
     require  => [
       File['/etc/openstack-health.conf'],
-      Exec['package-application'],
+      Exec['install_openstack_health'],
     ],
   }
   if ! defined(Httpd::Mod['cache']) {

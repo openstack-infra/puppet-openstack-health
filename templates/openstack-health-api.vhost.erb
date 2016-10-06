@@ -1,7 +1,6 @@
 <% unless [443, 80].include?(scope.lookupvar("openstack_health::api::vhost_port").to_i) %>
 Listen <%= scope.lookupvar("openstack_health::api::vhost_port") %>
 <% end %>
-WSGIPythonHome <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>
 <VirtualHost *:<%= scope.lookupvar("openstack_health::api::vhost_port") %>>
   ServerName <%= scope.lookupvar("openstack_health::api::vhost_name") %>
   ServerAdmin <%= scope.lookupvar("openstack_health::api::server_admin") %>
@@ -11,9 +10,9 @@ WSGIPythonHome <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>
   ErrorLog ${APACHE_LOG_DIR}/openstack-health-api-error.log
 
   WSGIDaemonProcess flask user=openstack_health group=openstack_health threads=5 home=<%= scope.lookupvar("openstack_health::api::source_dir") %>
-  WSGIScriptAlias / <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>/bin/openstack-health
+  WSGIScriptAlias / /usr/local/bin/openstack-health
 
-  <Directory <%= scope.lookupvar("openstack_health::api::virtualenv_dir") %>/bin>
+  <Directory /usr/local/bin>
     WSGIProcessGroup flask
     WSGIApplicationGroup %{GLOBAL}
     WSGIScriptReloading On
