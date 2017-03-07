@@ -109,6 +109,10 @@ class openstack_health::api(
     ensure => present,
   }
 
+  package {'libssl-dev':
+    ensure => present,
+  }
+
   exec { 'requirements':
     command     => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt",
     require     => [
