@@ -4,13 +4,14 @@
 #     The directory where the application will be running
 
 class openstack_health::frontend(
-  $source_dir = '/opt/openstack-health',
   $api_endpoint,
+  $source_dir = '/opt/openstack-health',
 ) {
 
   class { '::nodejs':
     legacy_debian_symlinks => true,
     repo_url_suffix        => 'node_0.12',
+    npm_package_ensure     => 'present',
   }
 
   package { 'node-gyp':

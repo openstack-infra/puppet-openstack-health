@@ -15,43 +15,6 @@ describe 'puppet-openstack_health::api manifest', :if => ['debian', 'ubuntu'].in
     apply_manifest(frontend_puppet_module, catch_failures: true)
   end
 
-  describe 'required packages' do
-    describe 'os packages' do
-      required_packages = [
-        package('apache2'),
-        package('nodejs'),
-      ]
-
-      required_packages.each do |package|
-        describe package do
-          it { should be_installed }
-        end
-      end
-    end
-
-    describe 'npm packages' do
-      required_packages = [
-        package('npm'),
-        package('node-gyp'),
-        package('gulp'),
-      ]
-
-      required_packages.each do |package|
-        describe package do
-          it { should be_installed.by('npm') }
-        end
-      end
-    end
-  end
-
-  describe 'required files' do
-    describe file('/opt/openstack-health') do
-      it { should be_directory }
-      it { should be_owned_by 'openstack_health' }
-      it { should be_grouped_into 'openstack_health' }
-    end
-  end
-
   describe 'required services' do
     describe 'ports are open and services are reachable' do
       describe port(80) do
