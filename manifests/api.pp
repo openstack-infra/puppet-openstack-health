@@ -42,7 +42,6 @@ class openstack_health::api(
   }
 
   $api_dir = "${source_dir}/openstack_health"
-  $virtualenv_dir = "${source_dir}/.venv"
 
   class { '::python':
     dev        => true,
@@ -64,11 +63,6 @@ class openstack_health::api(
     revision => $elastic_recheck_revision,
     source   => $elastic_recheck_repo,
     require  => Class['::openstack_health::user'],
-  }
-
-  ::python::virtualenv { $virtualenv_dir:
-    ensure  => present,
-    require => Class['::python'],
   }
 
   package {'apache2-utils':
@@ -110,9 +104,9 @@ class openstack_health::api(
   }
 
   exec { 'requirements':
-    command     => "${virtualenv_dir}/bin/pip install -U -r ${source_dir}/requirements.txt",
+    command     => "pip install -U -r ${source_dir}/requirements.txt",
+    path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
-      Python::Virtualenv[$virtualenv_dir],
       Package['libmemcached-dev'],
       Package['cython'],
     ],
@@ -122,9 +116,9 @@ class openstack_health::api(
   }
 
   exec { 'elastic-recheck-install':
-    command     => "${virtualenv_dir}/bin/pip install -U ${elastic_recheck_dir}",
+    command     => "pip install -U ${elastic_recheck_dir}",
+    path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
-      Python::Virtualenv[$virtualenv_dir],
       Package['libffi-dev'],
     ],
     subscribe   => Vcsrepo[$elastic_recheck_dir],
@@ -133,8 +127,10 @@ class openstack_health::api(
   }
 
   exec { 'package-application':
-    command     => "${virtualenv_dir}/bin/pip install -e ${source_dir}",
+    command     => "pip install -e ${source_dir}",
+    path        => '/usr/local/bin:/usr/bin:/bin/',
     refreshonly => true,
+    require     => Exec['elastic-recheck-install'],
     subscribe   => Exec['requirements'],
   }
 
