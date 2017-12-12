@@ -16,10 +16,16 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": ["14.04"]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": ["16.04"]
     }
+
   ],
   "dependencies": [
     {"name":"openstackinfra/vcsrepo","version_requirement":">= 0.0.8"},
-    {"name":"saz/memcached","version_requirement":">= 2.8.1"}
+    {"name":"saz/memcached","version_requirement":">= 2.8.1"},
+    {"name":"puppet/nodejs","version_requirement":">= v2.3.0"}
   ]
 }
