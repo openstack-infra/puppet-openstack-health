@@ -9,7 +9,7 @@ Listen <%= @vhost_port %>
   CustomLog ${APACHE_LOG_DIR}/openstack-health-frontend-access.log combined
   ErrorLog ${APACHE_LOG_DIR}/openstack-health-frontend-error.log
 
-  <Directory <%= @frontend_dir %>>
+  <Directory <%= scope.lookupvar('::openstack_health::vhost::frontend_dir') %>>
     Order allow,deny
     Allow from all
     <IfVersion >= 2.4>
@@ -17,6 +17,6 @@ Listen <%= @vhost_port %>
     </IfVersion>
   </Directory>
 
-  DocumentRoot <%= @frontend_dir %>
+  DocumentRoot <%= scope.lookupvar('::openstack_health::vhost::frontend_dir') %>
   DirectoryIndex index.html
 </VirtualHost>
