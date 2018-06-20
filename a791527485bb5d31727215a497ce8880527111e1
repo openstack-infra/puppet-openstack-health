@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 20 Jun 2018 08:41:27 +0000
+Reviewed-on: https://review.openstack.org/564860
+Project: openstack-infra/puppet-openstack_health
+Branch: refs/heads/master
