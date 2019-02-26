@@ -103,8 +103,9 @@ class openstack_health::api(
     ensure => present,
   }
 
-  exec { 'requirements':
-    command     => "pip install -U -r ${source_dir}/requirements.txt",
+  exec { 'requirements-bin-pip':
+    command     => "/usr/bin/pip install -U -r ${source_dir}/requirements.txt",
+    onlyif      => 'test -f /usr/bin/pip',
     path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
       Package['libmemcached-dev'],
@@ -115,8 +116,9 @@ class openstack_health::api(
     timeout     => 1800,
   }
 
-  exec { 'elastic-recheck-install':
-    command     => "pip install -U ${elastic_recheck_dir}",
+  exec { 'elastic-recheck-install-bin-pip':
+    command     => "/usr/bin/pip install -U ${elastic_recheck_dir}",
+    onlyif      => 'test -f /usr/bin/pip',
     path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
       Package['libffi-dev'],
@@ -126,12 +128,49 @@ class openstack_health::api(
     timeout     => 1800,
   }
 
-  exec { 'package-application':
-    command     => "pip install -U ${source_dir}",
+  exec { 'package-application-bin-pip':
+    command     => "/usr/bin/pip install -U ${source_dir}",
+    onlyif      => 'test -f /usr/bin/pip',
     path        => '/usr/local/bin:/usr/bin:/bin/',
     refreshonly => true,
-    require     => Exec['elastic-recheck-install'],
-    subscribe   => Exec['requirements'],
+    require     => Exec['elastic-recheck-install-bin-pip'],
+    subscribe   => Exec['requirements-bin-pip'],
+    before      => Httpd::Vhost["${vhost_name}-api"],
+  }
+
+  exec { 'requirements-local-bin-pip':
+    command     => "/usr/local/bin/pip install -U -r ${source_dir}/requirements.txt",
+    onlyif      => 'test -f /usr/local/bin/pip',
+    path        => '/usr/local/bin:/usr/bin:/bin/',
+    require     => [
+      Package['libmemcached-dev'],
+      Package['cython'],
+    ],
+    subscribe   => Vcsrepo[$source_dir],
+    refreshonly => true,
+    timeout     => 1800,
+  }
+
+  exec { 'elastic-recheck-install-local-bin-pip':
+    command     => "/usr/local/bin/pip install -U ${elastic_recheck_dir}",
+    onlyif      => 'test -f /usr/local/bin/pip',
+    path        => '/usr/local/bin:/usr/bin:/bin/',
+    require     => [
+      Package['libffi-dev'],
+    ],
+    subscribe   => Vcsrepo[$elastic_recheck_dir],
+    refreshonly => true,
+    timeout     => 1800,
+  }
+
+  exec { 'package-application-local-bin-pip':
+    command     => "/usr/local/bin/pip install -U ${source_dir}",
+    onlyif      => 'test -f /usr/local/bin/pip',
+    path        => '/usr/local/bin:/usr/bin:/bin/',
+    refreshonly => true,
+    require     => Exec['elastic-recheck-install-local-bin-pip'],
+    subscribe   => Exec['requirements-local-bin-pip'],
+    before      => Httpd::Vhost["${vhost_name}-api"],
   }
 
   file { '/etc/openstack-health.conf':
@@ -154,7 +193,6 @@ class openstack_health::api(
     template => 'openstack_health/openstack-health-api.vhost.erb',
     require  => [
       File['/etc/openstack-health.conf'],
-      Exec['package-application'],
     ],
   }
   if ! defined(Httpd::Mod['cache']) {
