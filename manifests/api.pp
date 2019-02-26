@@ -104,7 +104,7 @@ class openstack_health::api(
   }
 
   exec { 'requirements':
-    command     => "pip install -U -r ${source_dir}/requirements.txt",
+    command     => "/usr/bin/pip install -U -r ${source_dir}/requirements.txt",
     path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
       Package['libmemcached-dev'],
@@ -116,7 +116,7 @@ class openstack_health::api(
   }
 
   exec { 'elastic-recheck-install':
-    command     => "pip install -U ${elastic_recheck_dir}",
+    command     => "/usr/bin/pip install -U ${elastic_recheck_dir}",
     path        => '/usr/local/bin:/usr/bin:/bin/',
     require     => [
       Package['libffi-dev'],
@@ -127,7 +127,7 @@ class openstack_health::api(
   }
 
   exec { 'package-application':
-    command     => "pip install -U ${source_dir}",
+    command     => "/usr/bin/pip install -U ${source_dir}",
     path        => '/usr/local/bin:/usr/bin:/bin/',
     refreshonly => true,
     require     => Exec['elastic-recheck-install'],
