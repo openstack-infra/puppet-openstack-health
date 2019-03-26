@@ -1,0 +1,8 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 26 Mar 2019 14:14:04 +0000
+Reviewed-on: https://review.openstack.org/646978
+Project: openstack-infra/puppet-openstack_health
+Branch: refs/heads/master
